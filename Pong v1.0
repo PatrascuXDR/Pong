@@ -1,0 +1,295 @@
+//Ultimul update: 26.01.2026
+
+#include <bits/stdc++.h>
+#include <windows.h>
+#include <fstream>
+#include <string>
+#include <time.h>
+#include <chrono>
+#include <thread>
+#include <cstdlib>
+#include <conio.h>
+#include <stdlib.h>
+#include <random>
+using namespace std;
+char a[21][36], x;
+int i, j, p = -1, r = -1, scor[2], ps[3] = {0, 8, 12}, pd[3] = {0, 8, 12}, dificultate, scor_sp, highScore, random;
+const int n = 35, m = 20;
+bool atins, mod, skip, pause;
+void ShowConsoleCursor(bool showFlag)
+{
+    HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    CONSOLE_CURSOR_INFO     cursorInfo;
+
+    GetConsoleCursorInfo(out, &cursorInfo);
+    cursorInfo.bVisible = showFlag; // set the cursor visibility
+    SetConsoleCursorInfo(out, &cursorInfo);
+}
+void load()
+{
+    ifstream f("save.txt");
+    f >> highScore;
+    f.close();
+}
+bool select_diff(){
+    if (GetAsyncKeyState(0x31) & 0x0001) { dificultate = 200; return 1; }
+    if (GetAsyncKeyState(0x32) & 0x0001) { dificultate = 150; return 1; }
+    if (GetAsyncKeyState(0x33) & 0x0001) { dificultate = 100; return 1; }
+    if (GetAsyncKeyState(0x34) & 0x0001) { dificultate = 50; return 1; }
+    if (GetAsyncKeyState(0x35) & 0x0001) { dificultate = 1; return 1; }
+    return 0;
+}
+void help_menu(){
+    cout << "W S controleaza peretele din stanga, iar sageata sus si jos cel din dreapta.\nPentru singleplayer se joaca doar cu W S,\n";
+    cout << "iar dificultatea modifica viteza mingii si sansa ca bot-ul sa miste peretele sau astfel:\n";
+    cout << "Incepator: O miscare a mingii la fiecare 200ms + sansa de 20% ca miscarea bot-ului sa dea fail;\n";
+    cout << "Usor: O miscare a mingii la fiecare 150ms + sansa de 15% ca miscarea bot-ului sa dea fail;\n";
+    cout << "Mediu: O miscare a mingii la fiecare 100ms + sansa de 10% ca miscarea bot-ului sa dea fail;\n";
+    cout << "Greu: O miscare a mingii la fiecare 50ms + sansa de 5% ca miscarea bot-ului sa dea fail;\n";
+    cout << "Inuman: O miscare a mingii la fiecare 1ms + bot-ul se va misca garantat.\n";
+    cout << "Pentru multiplayer dificultatea schimba doar viteza jocului la valorite antementionate.\n";
+    cout << "Apasa SPACE pentru a te intoarce la meniul principal.";
+}
+void MainMenu()
+{
+    system("cls");
+    while(1){
+        cout << "   P I N G  P O N G\n";
+        cout << "|     |\n";
+        cout << "|O    |\n";
+        cout << "|     |\n";
+        cout << "Selecteaza dificultatea: (dificultatea este doar un modificator de viteza)\n1.Incepator\n2.Usor\n3.Mediu\n4.Greu\n5.Inuman\nApasa h pentru help menu";
+        if (GetAsyncKeyState(VK_ESCAPE) & 0x0001) exit(0);
+        else if (GetAsyncKeyState('H') & 0x0001){
+            Sleep(1000);
+            system("cls");
+            help_menu();
+            while(1) if (GetAsyncKeyState(VK_SPACE)) break;
+        }
+        if (select_diff()) break;
+        Sleep(400);
+        system("cls");
+        cout << "   P I N G  P O N G\n";
+        cout << "|     |\n";
+        cout << "|  O  |\n";
+        cout << "|     |\n";
+        cout << "Selecteaza dificultatea: (dificultatea este doar un modificator de viteza)\n1.Incepator\n2.Usor\n3.Mediu\n4.Greu\n5.Inuman\nApasa h pentru help menu";
+        if (GetAsyncKeyState(VK_ESCAPE) & 0x0001) exit(0);
+        else if (GetAsyncKeyState('H') & 0x0001){
+            Sleep(1000);
+            system("cls");
+            help_menu();
+            while(1) if (GetAsyncKeyState(VK_SPACE)) break;
+        }
+        if (select_diff()) break;
+        Sleep(400);
+        system("cls");
+        cout << "   P I N G  P O N G\n";
+        cout << "|     |\n";
+        cout << "|    O|\n";
+        cout << "|     |\n";
+        cout << "Selecteaza dificultatea: (dificultatea este doar un modificator de viteza)\n1.Incepator\n2.Usor\n3.Mediu\n4.Greu\n5.Inuman\nApasa h pentru help menu";
+        if (GetAsyncKeyState(VK_ESCAPE) & 0x0001) exit(0);
+        else if (GetAsyncKeyState('H') & 0x0001){
+            Sleep(1000);
+            system("cls");
+            help_menu();
+            while(1) if (GetAsyncKeyState(VK_SPACE)) break;
+        }
+        if (select_diff()) break;
+        Sleep(400);
+        system("cls");
+        cout << "   P I N G  P O N G\n";
+        cout << "|     |\n";
+        cout << "|  O  |\n";
+        cout << "|     |\n";
+        cout << "Selecteaza dificultatea: (dificultatea este doar un modificator de viteza)\n1.Incepator\n2.Usor\n3.Mediu\n4.Greu\n5.Inuman\nApasa h pentru help menu";
+        if (GetAsyncKeyState(VK_ESCAPE) & 0x0001) exit(0);
+        else if (GetAsyncKeyState('H') & 0x0001){
+            Sleep(1000);
+            system("cls");
+            help_menu();
+            while(1) if (GetAsyncKeyState(VK_SPACE)) break;
+        }
+        if (select_diff()) break;
+        Sleep(400);
+
+        system("cls");
+    }
+    system("cls");
+}
+void setup()
+{
+    load();
+    atins = 0; x = ' ';
+    i = 10; j = 20;
+    ps[1] = 8; ps[2] = 12;
+    pd[1] = 8; pd[2] = 12;
+    p = -1; r = 0;
+    scor_sp = 0;
+    skip = 0;
+    int ii, jj;
+    for (ii = 1; ii < 8; ii ++) a[ii][1] = a[ii][n] = ' ';
+    for (ii = 13; ii < m; ii ++) a[ii][1] = a[ii][n] = ' ';
+    for (ii = 1; ii <= n; ii ++) a[0][ii] = '_', a[m][ii] = '_';
+    for (ii = 8; ii <= 12; ii ++) a[ii][1] = a[ii][n] = '|';
+    for (ii = 1; ii < m; ii ++)
+        for (jj = 2; jj < n; jj ++)
+            a[ii][jj] = ' ';
+    a[10][20] = 'O';
+}
+void afisare()
+{
+    system("cls");
+    int ii, jj;
+    for (ii = 0; ii <= 20; ii ++){
+        for (jj = 1; jj <= n; jj ++)
+            if (a[ii][jj - 1] == '|') cout << a[ii][jj];
+            else cout << a[ii][jj];
+        cout << "\n";
+    }
+    if (mod) cout << "Jucator1  " << scor[0] << "             Jucator2  " << scor[1];
+    else cout << "Scor: " << scor_sp << "             HighScore:  " << highScore;
+}
+void save()
+{
+    fstream f("save.txt", ios::in | ios::out | ios::trunc);
+    f << highScore;
+    f.close();
+}
+void mode_select(){
+    system("cls");
+    cout << "Selecteaza modul(1/2):\n1 - singleplayer\n2 - multiplayer(local)\n";
+    cout << "Modul singleplayer a fost facut teoretic imposibil de batut, \nasa ca scorul creste de fiecare daca cand lovesti mingea.";
+    cout << "\n\nApasa butonul '-' pentru a sterge highScore-ul (singleplayer)";
+    cout << "\nHighScore curent: " << highScore;
+    cout << "\n\nTip: Poti apasa ESCAPE oricand pentru a te intoarce la meniul principal/inchide jocul";
+}
+int main()
+{
+    std::mt19937 rng(std::random_device{}());
+    uniform_int_distribution<int> dist(1, 100);
+    ShowConsoleCursor(false);
+    while (1){
+        setup();
+        MainMenu();
+        system("cls"); x = 0;
+        Sleep(1000);
+        mode_select();
+        while(x != '1' && x != '2'){
+            if (GetAsyncKeyState(0x31) & 0x0001) x = '1';
+            if (GetAsyncKeyState(0x32) & 0x0001) x = '2';
+            if (GetAsyncKeyState(VK_ESCAPE) & 0x0001) {skip = 1; break;}
+            else if(GetAsyncKeyState(0xBD) & 0x0001){ // pentru sters scor
+                Sleep(500);
+                cout << "\nEsti sigur? Apasa '-' din nou pentru a confirma sau apasa SPACE buton pentru a reveni.";
+                while(1){
+                    if(GetAsyncKeyState(0xBD) & 0x0001){
+                        highScore = 0;
+                        save();
+                        mode_select();
+                        Sleep(1000);
+                        break;
+                    }
+                    else if (GetAsyncKeyState(VK_SPACE) & 0x0001){
+                        mode_select();
+                        break;
+                    }
+                }
+            }
+        }
+        if (x == '1' && !skip){
+            while(1){
+                afisare();
+                if (GetAsyncKeyState(VK_ESCAPE) && 0x0001){
+                    scor[0] = scor[1] = 0;
+                    system("cls");
+                    break;
+                }
+                if (GetAsyncKeyState('W') && 0x8000 && ps[1] > 1) a[ps[1] - 1][1] = '|', a[ps[2]][1] = ' ', ps[1] --, ps[2] --, Sleep(10);
+                else if (GetAsyncKeyState('S') && 0x8000 && ps[2] < m - 1) a[ps[1]][1] = ' ', ps[1] ++, a[ps[2] + 1][1] = '|', ps[2] ++, Sleep(10);
+                // auto
+                random = dist(rng);
+                if (random > dificultate / 10){
+                    if (dificultate != 1 || scor_sp < 100){
+                        if (i < pd[1] + 2 && pd[1] > 1) a[pd[1] - 1][n] = '|', a[pd[2]][n] = ' ', pd[1] --, pd[2] --;
+                        else if (i > pd[2] - 2 && pd[2] < m - 1) a[pd[1]][n] = ' ', pd[1] ++, a[pd[2] + 1][n] = '|', pd[2] ++;
+                    }
+                }
+                // final auto
+                if ((j == 2 || j == n - 1) && !atins) r = -1, atins = 1;
+                swap(a[i][j], a[i + r][j + p]);
+                i += r; j += p;
+                if (r == 1 && i + r >= m) r = -r;
+                else if (r == -1 && i + r < 1) r = -r;
+                if (j == 2 && a[i][j + p] == '|'){
+                    p = -p;
+                    scor_sp ++;
+                    if (scor_sp > highScore) highScore = scor_sp;
+                    save();
+                }
+                if (j == n - 1 && a[i][j + p] == '|') p = -p;
+                if (j == 1){
+                    cout << "\n\nCalculatorul a primit un punct";
+                    scor_sp = 0;
+                    this_thread::sleep_for(chrono::seconds(1));
+                    x = getch();
+                    setup();
+                    x = ' ';
+                }
+                else if (j == n){
+                    cout << "\n\nBravo baiete!!";
+                    this_thread::sleep_for(chrono::seconds(1));
+                    x = getch();
+                    setup();
+                    x = ' ';
+                }
+                this_thread::sleep_for(chrono::milliseconds(dificultate));
+            }
+        }
+        else if (x == '2' && !skip){
+            mod = 1;
+            while(1){
+                afisare();
+                if (GetAsyncKeyState(VK_ESCAPE) && 0x8000){
+                    scor[0] = scor[1] = 0;
+                    system("cls");
+                    break;
+                }
+                if (GetAsyncKeyState('W') && 0x8000 && ps[1] > 1) a[ps[1] - 1][1] = '|', a[ps[2]][1] = ' ', ps[1] --, ps[2] --;
+                else if (GetAsyncKeyState('S') && 0x8000 && ps[2] < m - 1) a[ps[1]][1] = ' ', ps[1] ++, a[ps[2] + 1][1] = '|', ps[2] ++;
+                if (GetAsyncKeyState(VK_UP) && 0x8000 && pd[1] > 1) a[pd[1] - 1][n] = '|', a[pd[2]][n] = ' ', pd[1] --, pd[2] --;
+                else if (GetAsyncKeyState(VK_DOWN) && 0x8000 && pd[2] < m - 1) a[pd[1]][n] = ' ', pd[1] ++, a[pd[2] + 1][n] = '|', pd[2] ++;
+                if ((j == 2 || j == n - 1) && !atins) r = -1, atins = 1;
+                swap(a[i][j], a[i + r][j + p]);
+                i += r; j += p;
+                if (r == 1 && i + r >= m) r = -r;
+                else if (r == -1 && i + r < 1) r = -r;
+                if ((j == 2 && a[i][j + p] == '|') || (j == n - 1 && a[i][j + p] == '|')) p = -p;
+                if (j == 1){
+                    cout << "\n\nJucator2 a primit un punct";
+                    scor[1] ++;
+                    this_thread::sleep_for(chrono::seconds(1));
+                    x = getch();
+                    setup();
+                    x = ' ';
+                }
+                else if (j == n){
+                    cout << "\n\nJucator1 a primit un punct";
+                    scor[0] ++;
+                    this_thread::sleep_for(chrono::seconds(1));
+                    x = getch();
+                    setup();
+                    x = ' ';
+                }
+                this_thread::sleep_for(chrono::milliseconds(dificultate));
+            }
+        }
+        save();
+    }
+    return 0;
+}
+
+
+

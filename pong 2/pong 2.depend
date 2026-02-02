@@ -1,0 +1,31 @@
+# depslib dependency file v1.0
+1770060345 source:c:\users\patra\desktop\codeblocks apps\pong 2\main.cpp
+	<fstream>
+	<iostream>
+	<string>
+	<time.h>
+	<chrono>
+	<thread>
+	<cstdlib>
+	<conio.h>
+	<stdlib.h>
+	<random>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+
+1770061052 source:c:\apps\codeblocks apps\pong 2\main.cpp
+	<fstream>
+	<iostream>
+	<string>
+	<time.h>
+	<chrono>
+	<thread>
+	<cstdlib>
+	<conio.h>
+	<stdlib.h>
+	<random>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+

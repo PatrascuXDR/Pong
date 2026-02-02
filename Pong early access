@@ -1,0 +1,229 @@
+//Early version, outdated!
+
+#include <bits/stdc++.h>
+#include <fstream>
+#include <chrono>
+#include <thread>
+#include <cstdlib>
+#include <conio.h>
+using namespace std;
+char a[21][36], x;
+int i, j, p = -1, r = -1, scor[2], ps[3] = {0, 8, 12}, pd[3] = {0, 8, 12}, dificultate, scor_sp, highScore;
+const int n = 35, m = 20;
+bool atins, mod, skip;
+void load()
+{
+    ifstream f("save.txt");
+    f >> highScore;
+    f.close();
+}
+void MainMenu()
+{
+    while(1){
+        cout << "   P I N G  P O N G\n";
+        cout << "|     |\n";
+        cout << "|O    |\n";
+        cout << "|     |\n";
+        cout << "Selecteaza dificultatea: (dificultatea este doar un modificator de viteza)\n1.Incepator\n2.Usor\n3.Mediu\n4.Greu\n5.Inuman\nApasa h pentru help menu";
+        if (kbhit()) break;
+        this_thread::sleep_for(chrono::milliseconds(400));
+        system("cls");
+        cout << "   P I N G  P O N G\n";
+        cout << "|     |\n";
+        cout << "|  O  |\n";
+        cout << "|     |\n";
+        cout << "Selecteaza dificultatea: (dificultatea este doar un modificator de viteza)\n1.Incepator\n2.Usor\n3.Mediu\n4.Greu\n5.Inuman\nApasa h pentru help menu";
+        if (kbhit()) break;
+        this_thread::sleep_for(chrono::milliseconds(400));
+        system("cls");
+        cout << "   P I N G  P O N G\n";
+        cout << "|     |\n";
+        cout << "|    O|\n";
+        cout << "|     |\n";
+        cout << "Selecteaza dificultatea: (dificultatea este doar un modificator de viteza)\n1.Incepator\n2.Usor\n3.Mediu\n4.Greu\n5.Inuman\nApasa h pentru help menu";
+        if (kbhit()) break;
+        this_thread::sleep_for(chrono::milliseconds(400));
+        system("cls");
+        cout << "   P I N G  P O N G\n";
+        cout << "|     |\n";
+        cout << "|  O  |\n";
+        cout << "|     |\n";
+        cout << "Selecteaza dificultatea: (dificultatea este doar un modificator de viteza)\n1.Incepator\n2.Usor\n3.Mediu\n4.Greu\n5.Inuman\nApasa h pentru help menu";
+        if (kbhit()) break;
+        this_thread::sleep_for(chrono::milliseconds(400));
+
+        system("cls");
+    }
+}
+void setup()
+{
+    load();
+    atins = 0; x = ' ';
+    i = 10; j = 20;
+    ps[1] = 8; ps[2] = 12;
+    pd[1] = 8; pd[2] = 12;
+    p = -1; r = 0;
+    scor_sp = 0;
+    skip = 0;
+    int ii, jj;
+    for (ii = 1; ii < 8; ii ++) a[ii][1] = a[ii][n] = ' ';
+    for (ii = 13; ii < m; ii ++) a[ii][1] = a[ii][n] = ' ';
+    for (ii = 1; ii <= n; ii ++) a[0][ii] = '_', a[m][ii] = '_';
+    for (ii = 8; ii <= 12; ii ++) a[ii][1] = a[ii][n] = '|';
+    for (ii = 1; ii < m; ii ++)
+        for (jj = 2; jj < n; jj ++)
+            a[ii][jj] = ' ';
+    a[10][20] = 'O';
+}
+void afisare()
+{
+    system("cls");
+    int ii, jj;
+    for (ii = 0; ii <= 20; ii ++){
+        for (jj = 1; jj <= n; jj ++)
+            if (a[ii][jj - 1] == '|') cout << a[ii][jj];
+            else cout << a[ii][jj];
+        cout << "\n";
+    }
+    if (mod) cout << "Jucator1  " << scor[0] << "             Jucator2  " << scor[1];
+    else cout << "Scor: " << scor_sp << "             HighScore:  " << highScore;
+}
+void save()
+{
+    fstream f("save.txt", ios::in | ios::out | ios::trunc);
+    f << highScore;
+    f.close();
+}
+int main()
+{
+    while (1){
+        setup();
+        system("cls");
+        MainMenu();
+        system("cls");
+        dificultate = getch();
+        if (dificultate == '`') return 0;
+        else if (dificultate == 'h'){
+            system("cls");
+            cout << "W S controleaza peretele din stanga, iar I K cel din dreapta\nPentru singleplayer se joaca doar cu W S\nApasa orice tasta pentru a te intoarce la meniul principal";
+            x = getch();
+            system("cls");
+            MainMenu();
+            dificultate = getch();
+        }
+        dificultate = dificultate - '0';
+        if (dificultate == 1) dificultate = 200;
+        else if (dificultate == 2) dificultate = 150;
+        else if (dificultate == 3) dificultate = 100;
+        else if (dificultate == 4) dificultate = 50;
+        else dificultate = 1;
+        system("cls"); x = 0;
+        while(x != '1' && x != '2'){
+            system("cls");
+            cout << "Selecteaza modul(1/2):\n1 - singleplayer\n2 - multiplayer(local)\n";
+            cout << "Modul singleplayer a fost facut teoretic imposibil de batut, \nasa ca scorul creste de fiecare daca cand lovesti mingea.";
+            cout << "\n\nApasa butonul '-' pentru a sterge highScore-ul (singleplayer)";
+            cout << "\nHighScore curent: " << highScore;
+            cout << "\n\nTip: Poti apasa ` (sub ESC) oricand pentru a te intoarce la meniul principal/inchide jocul";
+            x = getch();
+            if (x == '`') {skip = 1; break;}
+            else if(x == '-'){
+                cout << "\nEsti sigur? Apasa din nou pentru a confirma";
+                x = getch();
+                if(x == '-'){
+                    highScore = 0;
+                    save();
+                }
+                else continue;
+            }
+        }
+        if (x == '1' && !skip){
+            while(1){
+                afisare();
+                if (kbhit()) x = getch();
+                if (x == '`'){
+                    scor[0] = scor[1] = 0;
+                    system("cls");
+                    break;
+                }
+                if (x == 'w' && ps[1] > 1) a[ps[1] - 1][1] = '|', a[ps[2]][1] = ' ', ps[1] --, ps[2] --;
+                else if (x == 's' && ps[2] < m - 1) a[ps[1]][1] = ' ', ps[1] ++, a[ps[2] + 1][1] = '|', ps[2] ++;
+                // autonom
+                if (i < pd[1] + 2 && pd[1] > 1) a[pd[1] - 1][n] = '|', a[pd[2]][n] = ' ', pd[1] --, pd[2] --;
+                else if (i > pd[2] - 2 && pd[2] < m - 1) a[pd[1]][n] = ' ', pd[1] ++, a[pd[2] + 1][n] = '|', pd[2] ++;
+                // final auto
+                x = ' ';
+                if ((j == 2 || j == n - 1) && !atins) r = -1, atins = 1;
+                swap(a[i][j], a[i + r][j + p]);
+                i += r; j += p;
+                if (r == 1 && i + r >= m) r = -r;
+                else if (r == -1 && i + r < 1) r = -r;
+                if (j == 2 && a[i][j + p] == '|'){
+                    p = -p;
+                    scor_sp ++;
+                    if (scor_sp > highScore) highScore = scor_sp;
+                    save();
+                }
+                if (j == n - 1 && a[i][j + p] == '|') p = -p;
+                if (j == 1){
+                    cout << "\n\nCalculatorul a primit un punct";
+                    scor_sp = 0;
+                    this_thread::sleep_for(chrono::seconds(1));
+                    x = getch();
+                    setup();
+                    x = ' ';
+                }
+                else if (j == n){
+                    cout << "\n\nAi reusit imposibilul! Ai batut botul facut sa nu poata sa piarda!!";
+                    this_thread::sleep_for(chrono::seconds(1));
+                    x = getch();
+                    setup();
+                    x = ' ';
+                }
+                this_thread::sleep_for(chrono::milliseconds(dificultate));
+            }
+        }
+        else if (x == '2' && !skip){
+            mod = 1;
+            while(1){
+                afisare();
+                if (kbhit()) x = getch();
+                if (x == '`'){
+                    scor[0] = scor[1] = 0;
+                    system("cls");
+                    break;
+                }
+                if (x == 'w' && ps[1] > 1) a[ps[1] - 1][1] = '|', a[ps[2]][1] = ' ', ps[1] --, ps[2] --;
+                else if (x == 's' && ps[2] < m - 1) a[ps[1]][1] = ' ', ps[1] ++, a[ps[2] + 1][1] = '|', ps[2] ++;
+                if (x == 'i' && pd[1] > 1) a[pd[1] - 1][n] = '|', a[pd[2]][n] = ' ', pd[1] --, pd[2] --;
+                else if (x == 'k' && pd[2] < m - 1) a[pd[1]][n] = ' ', pd[1] ++, a[pd[2] + 1][n] = '|', pd[2] ++;
+                x = ' ';
+                if ((j == 2 || j == n - 1) && !atins) r = -1, atins = 1;
+                swap(a[i][j], a[i + r][j + p]);
+                i += r; j += p;
+                if (r == 1 && i + r >= m) r = -r;
+                else if (r == -1 && i + r < 1) r = -r;
+                if ((j == 2 && a[i][j + p] == '|') || (j == n - 1 && a[i][j + p] == '|')) p = -p;
+                if (j == 1){
+                    cout << "\n\nJucator2 a primit un punct";
+                    scor[1] ++;
+                    this_thread::sleep_for(chrono::seconds(1));
+                    x = getch();
+                    setup();
+                    x = ' ';
+                }
+                else if (j == n){
+                    cout << "\n\nJucator1 a primit un punct";
+                    scor[0] ++;
+                    this_thread::sleep_for(chrono::seconds(1));
+                    x = getch();
+                    setup();
+                    x = ' ';
+                }
+                this_thread::sleep_for(chrono::milliseconds(dificultate));
+            }
+        }
+        save();
+    }
+    return 0;
+}
